@@ -54,7 +54,7 @@ const Step1PersonalInfo = ({ formData, updateForm, nextStep }) => {
       setUsernameStatus(null); 
       updateForm('usernameAvailable', null);
     }
-  }, [formData.username]);
+  }, [formData.username, checkUsername, updateForm]);
 
   return (
     <form onSubmit={handleNext}>

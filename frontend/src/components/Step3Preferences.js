@@ -22,7 +22,7 @@ const Step3Preferences = ({ formData, updateForm, nextStep, prevStep, resetAddre
       updateForm('state', '');
       updateForm('city', '');
     }
-  }, [formData.country]);
+  }, [formData.country, resetAddress, updateForm]);
 
   useEffect(() => {
     if (formData.state) {
@@ -32,7 +32,7 @@ const Step3Preferences = ({ formData, updateForm, nextStep, prevStep, resetAddre
         .catch(err => console.error('Error fetching cities:', err));
       updateForm('city', '');
     }
-  }, [formData.state]);
+  }, [formData.state, updateForm]);
 
   const handleNext = e => {
     e.preventDefault();
