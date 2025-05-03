@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PasswordStrengthMeter from './PasswordStrengthMeter';
 
 const Step1PersonalInfo = ({ formData, updateForm, nextStep }) => {
@@ -15,11 +15,11 @@ const Step1PersonalInfo = ({ formData, updateForm, nextStep }) => {
     }
   };
 
-  const checkUsername = async () => {
-   
+  // ✅ Wrap checkUsername in useCallback
+  const checkUsername = useCallback(async () => {
     const res = await fetch(`/api/username-check?username=${formData.username}`);
     const data = await res.json();
-    
+
     if (data.available) {
       setUsernameStatus('Username is available');
       updateForm('usernameAvailable', true);
@@ -27,7 +27,7 @@ const Step1PersonalInfo = ({ formData, updateForm, nextStep }) => {
       setUsernameStatus('Username is already taken');
       updateForm('usernameAvailable', false);
     }
-  };
+  }, [formData.username, updateForm]); // ✅ dependency dalna zaruri
 
   const handleNext = e => {
     e.preventDefault();
@@ -44,17 +44,16 @@ const Step1PersonalInfo = ({ formData, updateForm, nextStep }) => {
   };
 
   useEffect(() => {
-    
     if (formData.username.length < 4 || formData.username.length > 20) {
       setUsernameStatus('Username must be between 4-20 characters');
-      updateForm('usernameAvailable', false); 
+      updateForm('usernameAvailable', false);
     } else if (formData.username.length > 0) {
-      checkUsername(); 
+      checkUsername();
     } else {
-      setUsernameStatus(null); 
+      setUsernameStatus(null);
       updateForm('usernameAvailable', null);
     }
-  }, [formData.username, checkUsername, updateForm]);
+  }, [formData.username, checkUsername, updateForm]); // ✅ ab lint warning nahi aayegi
 
   return (
     <form onSubmit={handleNext}>
